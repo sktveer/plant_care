@@ -7,23 +7,21 @@ const PlantCareApp = () => {
     species: '',
     acquisitionDate: '',
     notes: '',
-    category: ''
+    category: '',
   });
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Add Plant
   const addPlant = () => {
     if (newPlant.name && newPlant.species) {
       setPlants([...plants, { id: Date.now(), ...newPlant }]);
       setNewPlant({ name: '', species: '', acquisitionDate: '', notes: '', category: '' });
       setShowForm(false);
       setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 2000); // Auto-hide success message after 2 seconds
+      setTimeout(() => setShowSuccess(false), 2000);
     }
   };
 
-  // Remove Plant
   const removePlant = (id) => {
     setPlants(plants.filter((plant) => plant.id !== id));
   };
@@ -37,18 +35,18 @@ const PlantCareApp = () => {
         <p className="text-green-600 mt-4 text-lg">Your companion for plant happiness and health.</p>
       </header>
 
-      {/* Success Pop-up */}
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-md shadow-md animate-bounce">
           Plant added successfully!
         </div>
       )}
 
-      {/* Plant List */}
       <section>
         <h2 className="text-3xl font-semibold text-green-700 mb-6">Your Plant Collection</h2>
         {plants.length === 0 ? (
-          <p className="text-center text-green-600">No plants added yet. Tap the + button to add your first plant!</p>
+          <p className="text-center text-green-600">
+            No plants added yet. Tap the + button to add your first plant!
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {plants.map((plant) => (
@@ -75,7 +73,6 @@ const PlantCareApp = () => {
         )}
       </section>
 
-      {/* Add Plant Button */}
       <button
         onClick={() => setShowForm(true)}
         className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition-transform transform hover:scale-110"
@@ -83,7 +80,6 @@ const PlantCareApp = () => {
         +
       </button>
 
-      {/* Add Plant Form */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
