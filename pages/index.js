@@ -1,83 +1,85 @@
-// Plant Care App Functionalities
+import React, { useState } from 'react';
 
-// State to manage plant collection
-const plants = [
-  // Example plant objects:
-  // { id: 1, name: "Aloe Vera", type: "Succulent", schedule: { water: "Every 3 days", sunlight: "Full Sun", fertilize: "Monthly" }, careGuide: "Aloe Vera needs bright sunlight and moderate watering." }
-];
+export default function Home() {
+  const [plants, setPlants] = useState([]);
+  const [newPlant, setNewPlant] = useState({ name: '', type: '' });
 
-// Function to add a new plant
-function addPlant(plant) {
-  plants.push({ ...plant, id: Date.now() });
-  console.log("Plant added:", plant);
-}
-
-// Function to remove a plant by ID
-function removePlant(id) {
-  const index = plants.findIndex((plant) => plant.id === id);
-  if (index !== -1) {
-    plants.splice(index, 1);
-    console.log(`Plant with ID ${id} removed.`);
-  } else {
-    console.error(`Plant with ID ${id} not found.`);
-  }
-}
-
-// Function to update plant details
-function updatePlant(id, updatedDetails) {
-  const plant = plants.find((p) => p.id === id);
-  if (plant) {
-    Object.assign(plant, updatedDetails);
-    console.log(`Plant with ID ${id} updated:`, updatedDetails);
-  } else {
-    console.error(`Plant with ID ${id} not found.`);
-  }
-}
-
-// Function to set care schedules for watering, sunlight, fertilization
-function setCareSchedule(id, schedule) {
-  const plant = plants.find((p) => p.id === id);
-  if (plant) {
-    plant.schedule = schedule;
-    console.log(`Care schedule set for plant ID ${id}:`, schedule);
-  } else {
-    console.error(`Plant with ID ${id} not found.`);
-  }
-}
-
-// Function to get a plant's care guide
-function getCareGuide(plantType) {
-  // Example guide - Ideally, this could fetch from a database or API
-  const careGuides = {
-    "Succulent": "Succulents require bright sunlight and minimal watering.",
-    "Fern": "Ferns need indirect sunlight and moist soil.",
-    "Orchid": "Orchids prefer bright, indirect light and weekly watering."
+  // Add Plant
+  const addPlant = () => {
+    if (newPlant.name && newPlant.type) {
+      setPlants([...plants, { id: Date.now(), ...newPlant }]);
+      setNewPlant({ name: '', type: '' });
+    }
   };
 
-  return careGuides[plantType] || "Care guide not available for this plant type.";
+  // Remove Plant
+  const removePlant = (id) => {
+    setPlants(plants.filter((plant) => plant.id !== id));
+  };
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+      <h1>Plant Care App 🌱</h1>
+      <h2>Manage Your Plants</h2>
+
+      {/* Add Plant Form */}
+      <div style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          placeholder="Plant Name"
+          value={newPlant.name}
+          onChange={(e) => setNewPlant({ ...newPlant, name: e.target.value })}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <input
+          type="text"
+          placeholder="Plant Type"
+          value={newPlant.type}
+          onChange={(e) => setNewPlant({ ...newPlant, type: e.target.value })}
+          style={{ marginRight: '10px', padding: '5px' }}
+        />
+        <button onClick={addPlant} style={{ padding: '5px 10px' }}>
+          Add Plant
+        </button>
+      </div>
+
+      {/* Plant List */}
+      <div>
+        <h3>Your Plants</h3>
+        {plants.length === 0 ? (
+          <p>No plants added yet. Start by adding a plant!</p>
+        ) : (
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {plants.map((plant) => (
+              <li
+                key={plant.id}
+                style={{
+                  marginBottom: '10px',
+                  padding: '10px',
+                  border: '1px solid #ddd',
+                  borderRadius: '5px',
+                }}
+              >
+                <strong>{plant.name}</strong> - {plant.type}
+                <button
+                  onClick={() => removePlant(plant.id)}
+                  style={{
+                    marginLeft: '10px',
+                    padding: '5px 10px',
+                    backgroundColor: 'red',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '3px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
 }
-
-// UI Interaction Mockup
-// Adding a new plant example
-addPlant({
-  name: "Snake Plant",
-  type: "Succulent",
-  schedule: {
-    water: "Every 2 weeks",
-    sunlight: "Low to Medium Light",
-    fertilize: "Bi-Annual"
-  }
-});
-
-// Setting a care schedule example
-setCareSchedule(1, { water: "Weekly", sunlight: "Bright Indirect Light", fertilize: "Monthly" });
-
-// Getting a care guide example
-const guide = getCareGuide("Succulent");
-console.log("Care Guide for Succulent:", guide);
-
-// Removing a plant example
-removePlant(1);
-
-// Updating a plant example
-updatePlant(2, { name: "Updated Plant Name" });
