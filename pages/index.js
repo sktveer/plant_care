@@ -31,7 +31,7 @@ export default function Home() {
         {plants.map((plant, index) => (
           <div key={index} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg">
             <img
-              src="https://drive.google.com/uc?export=view&id=17-6LOKUZAsb3i5lWRPY3xihlPngWdg3K"
+              src="https://i.imgur.com/y4DqwI4.png"
               alt="Default Plant"
               className="w-full h-32 object-cover rounded-md mb-4"
             />
