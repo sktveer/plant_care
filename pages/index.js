@@ -51,7 +51,7 @@ export default function Home() {
             onClick={() => openPlantDetails(index)}
           >
             <img
-              src="/default-plant.jpg"
+              src="https://images.unsplash.com/photo-1617038380655-4728e1d8b6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGdyZWVuJTIwbGVhZnxlbnwwfHx8fDE2ODkwOTI2MTI&ixlib=rb-4.0.3&q=80&w=400"
               alt="Plant"
               className="w-full h-32 object-cover rounded-md mb-4"
             />
