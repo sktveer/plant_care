@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import confetti from "canvas-confetti";
 
 export default function Home() {
   const [plants, setPlants] = useState([]);
@@ -36,16 +35,6 @@ export default function Home() {
     } else {
       setWateredToday([...wateredToday, index]);
       updatedPlants[index].streak += 1;
-      const buttonRect = document.querySelector(`.water-btn-${index}`).getBoundingClientRect();
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: {
-          x: (buttonRect.left + buttonRect.width / 2) / window.innerWidth,
-          y: (buttonRect.top + buttonRect.height / 2) / window.innerHeight,
-        },
-        colors: ["#6B8E23"],
-      });
     }
     setPlants(updatedPlants);
   };
