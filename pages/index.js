@@ -18,24 +18,34 @@ const PlantCareApp = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-6">Plant Care Manager</h1>
-      <button
-        onClick={() => setShowModal(true)}
-        className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        Add Plant
-      </button>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="p-6 bg-gray-100 min-h-screen">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-green-700">Plant Care Manager</h1>
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-6 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600"
+        >
+          Add Plant
+        </button>
+      </header>
+
+      {/* Plant Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plants.map((plant, index) => (
-          <div key={index} className="rounded-xl shadow-md p-4 bg-white">
-            <h2 className="text-xl font-semibold">{plant.name}</h2>
-            <p className="text-sm text-gray-600">Species: {plant.species}</p>
-            <p className="text-sm text-gray-600">Notes: {plant.notes}</p>
-            <p className="text-sm text-gray-600">Schedule: {plant.schedule}</p>
+          <div key={index} className="bg-white shadow-md rounded-lg p-4">
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 bg-gray-200 rounded-full mb-4 flex items-center justify-center">
+                <span className="text-gray-400">No Image</span>
+              </div>
+              <h2 className="text-xl font-semibold text-green-800">{plant.name}</h2>
+              <p className="text-sm text-gray-600">Species: {plant.species}</p>
+              <p className="text-sm text-gray-600">Notes: {plant.notes}</p>
+              <p className="text-sm text-gray-600">Schedule: {plant.schedule}</p>
+            </div>
             <button
               onClick={() => removePlant(index)}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
             >
               Remove
             </button>
@@ -43,11 +53,12 @@ const PlantCareApp = () => {
         ))}
       </div>
 
+      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-4 w-1/3">
-            <h2 className="text-xl font-bold mb-4">Add a New Plant</h2>
-            <div className="mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-green-700 mb-4">Add a New Plant</h2>
+            <div className="space-y-4">
               <input
                 type="text"
                 placeholder="Plant Name"
@@ -55,8 +66,6 @@ const PlantCareApp = () => {
                 onChange={(e) => setNewPlant({ ...newPlant, name: e.target.value })}
                 className="w-full p-2 border rounded"
               />
-            </div>
-            <div className="mb-4">
               <input
                 type="text"
                 placeholder="Species"
@@ -64,16 +73,12 @@ const PlantCareApp = () => {
                 onChange={(e) => setNewPlant({ ...newPlant, species: e.target.value })}
                 className="w-full p-2 border rounded"
               />
-            </div>
-            <div className="mb-4">
               <textarea
                 placeholder="Notes"
                 value={newPlant.notes}
                 onChange={(e) => setNewPlant({ ...newPlant, notes: e.target.value })}
                 className="w-full p-2 border rounded"
-              />
-            </div>
-            <div className="mb-4">
+              ></textarea>
               <input
                 type="text"
                 placeholder="Care Schedule (e.g., Water every 3 days)"
@@ -82,18 +87,18 @@ const PlantCareApp = () => {
                 className="w-full p-2 border rounded"
               />
             </div>
-            <div className="flex justify-end">
-              <button
-                onClick={addPlant}
-                className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Add Plant
-              </button>
+            <div className="flex justify-end mt-4 space-x-4">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                className="px-6 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
               >
                 Cancel
+              </button>
+              <button
+                onClick={addPlant}
+                className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              >
+                Add Plant
               </button>
             </div>
           </div>
