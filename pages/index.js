@@ -1,25 +1,16 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 
 export default function Home() {
   const [plants, setPlants] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newPlant, setNewPlant] = useState({ name: "", species: "", notes: "" });
-  const [successMessage, setSuccessMessage] = useState(false);
-  const router = useRouter();
 
   const addPlant = () => {
     if (newPlant.name && newPlant.species) {
       setPlants([...plants, newPlant]);
       setNewPlant({ name: "", species: "", notes: "" });
       setShowModal(false);
-      setSuccessMessage(true);
-      setTimeout(() => setSuccessMessage(false), 3000); // Show success message for 3 seconds
     }
-  };
-
-  const openPlantDetails = (index) => {
-    router.push(`/plant/${index}`); // Navigate to the plant detail page
   };
 
   return (
@@ -35,24 +26,13 @@ export default function Home() {
         </button>
       </header>
 
-      {/* Success Message */}
-      {successMessage && (
-        <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-lg shadow-md">
-          Plant added successfully!
-        </div>
-      )}
-
       {/* Plants Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plants.map((plant, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg cursor-pointer"
-            onClick={() => openPlantDetails(index)}
-          >
+          <div key={index} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg">
             <img
-              src="https://images.unsplash.com/photo-1617038380655-4728e1d8b6d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGdyZWVuJTIwbGVhZnxlbnwwfHx8fDE2ODkwOTI2MTI&ixlib=rb-4.0.3&q=80&w=400"
-              alt="Plant"
+              src="https://drive.google.com/uc?export=view&id=17-6LOKUZAsb3i5lWRPY3xihlPngWdg3K"
+              alt="Default Plant"
               className="w-full h-32 object-cover rounded-md mb-4"
             />
             <h2 className="text-xl font-semibold text-green-800">{plant.name}</h2>
