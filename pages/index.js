@@ -3,12 +3,14 @@ import React, { useState } from "react";
 const PlantCareApp = () => {
   const [plants, setPlants] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newPlant, setNewPlant] = useState({ name: "", species: "", notes: "" });
+  const [newPlant, setNewPlant] = useState({ name: "", species: "", notes: "", schedule: "" });
 
   const addPlant = () => {
-    setPlants([...plants, newPlant]);
-    setNewPlant({ name: "", species: "", notes: "" });
-    setShowModal(false);
+    if (newPlant.name && newPlant.species) {
+      setPlants([...plants, newPlant]);
+      setNewPlant({ name: "", species: "", notes: "", schedule: "" });
+      setShowModal(false);
+    }
   };
 
   const removePlant = (index) => {
@@ -17,7 +19,7 @@ const PlantCareApp = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Plant Care Manager</h1>
+      <h1 className="text-3xl font-bold mb-6">Plant Care Manager</h1>
       <button
         onClick={() => setShowModal(true)}
         className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -30,6 +32,7 @@ const PlantCareApp = () => {
             <h2 className="text-xl font-semibold">{plant.name}</h2>
             <p className="text-sm text-gray-600">Species: {plant.species}</p>
             <p className="text-sm text-gray-600">Notes: {plant.notes}</p>
+            <p className="text-sm text-gray-600">Schedule: {plant.schedule}</p>
             <button
               onClick={() => removePlant(index)}
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -67,6 +70,15 @@ const PlantCareApp = () => {
                 placeholder="Notes"
                 value={newPlant.notes}
                 onChange={(e) => setNewPlant({ ...newPlant, notes: e.target.value })}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Care Schedule (e.g., Water every 3 days)"
+                value={newPlant.schedule}
+                onChange={(e) => setNewPlant({ ...newPlant, schedule: e.target.value })}
                 className="w-full p-2 border rounded"
               />
             </div>
