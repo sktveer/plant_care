@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 
 export default function Home() {
   const [plants, setPlants] = useState([]);
@@ -6,12 +7,24 @@ export default function Home() {
   const [newPlant, setNewPlant] = useState({ name: "", species: "", notes: "" });
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [wateredToday, setWateredToday] = useState([]);
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    const storedPlants = JSON.parse(localStorage.getItem("plants")) || [];
+    setPlants(storedPlants);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("plants", JSON.stringify(plants));
+  }, [plants]);
 
   const addPlant = () => {
     if (newPlant.name && newPlant.species) {
-      setPlants([...plants, { ...newPlant, streak: 0 }]);
+      setPlants([...plants, { ...newPlant, streak: 0, image: "https://i.imgur.com/y4DqwI4.png" }]);
       setNewPlant({ name: "", species: "", notes: "" });
       setShowModal(false);
+      setSuccessMessage(true);
+      setTimeout(() => setSuccessMessage(false), 2000);
     }
   };
 
@@ -23,41 +36,78 @@ export default function Home() {
     } else {
       setWateredToday([...wateredToday, index]);
       updatedPlants[index].streak += 1;
+      const buttonRect = document.querySelector(`.water-btn-${index}`).getBoundingClientRect();
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: {
+          x: (buttonRect.left + buttonRect.width / 2) / window.innerWidth,
+          y: (buttonRect.top + buttonRect.height / 2) / window.innerHeight,
+        },
+        colors: ["#6B8E23"],
+      });
     }
     setPlants(updatedPlants);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-green-300 via-green-100 to-green-200 p-6">
-      {/* Hero Section */}
-      <div className="flex flex-col items-center text-center py-16 bg-gradient-to-r from-green-400 via-green-300 to-green-100 rounded-lg shadow-lg">
-        <h1 className="text-6xl font-extrabold text-green-800 mb-4">Nurture Your Green Haven</h1>
-        <p className="text-xl text-gray-700 mb-6">Track. Care. Flourish. Your plants deserve the best!</p>
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-8 py-4 bg-green-600 text-white font-bold text-xl rounded-full shadow-md hover:bg-green-700 transition-transform transform hover:scale-105"
-        >
-          Add Your First Plant
-        </button>
+    <div className="min-h-screen bg-gradient-to-r from-green-300 via-green-100 to-green-200 p-6 relative">
+      {/* Falling Leaves Animation */}
+      <div className="absolute inset-0 pointer-events-none flex justify-center items-center">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-green-500 rounded-full opacity-75"
+            style={{
+              width: `${Math.random() * 15 + 5}px`,
+              height: `${Math.random() * 15 + 5}px`,
+              top: `-${Math.random() * 50}px`,
+              left: `${Math.random() * 80}%`,
+              animation: `fall ${Math.random() * 8 + 5}s linear infinite`,
+              animationDelay: `${Math.random()}s`,
+            }}
+          ></div>
+        ))}
       </div>
+
+      {/* Hero Section */}
+      <div className="flex flex-col items-center text-center py-16 bg-green-600 text-white rounded-lg shadow-lg relative overflow-hidden">
+        <h1 className="text-6xl font-extrabold mb-4">Nurture Your Green Haven</h1>
+        <p className="text-xl mb-6">Track. Care. Flourish. Your plants deserve the best!</p>
+        <div className="space-y-4">
+          <button
+            onClick={() => setShowModal(true)}
+            className="px-8 py-4 bg-white text-green-600 font-bold text-xl rounded-full shadow-md hover:bg-gray-100 transition-transform transform hover:scale-105"
+          >
+            Add Your First Plant
+          </button>
+        </div>
+      </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md">
+          Plant added successfully!
+        </div>
+      )}
 
       {/* Feature Highlights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 text-center">
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg">
           <div className="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
             <span className="text-green-700 text-3xl">🌱</span>
           </div>
           <h3 className="text-lg font-bold text-green-700">Plant Profiles</h3>
           <p className="text-gray-600">Create profiles to track your plant collection.</p>
         </div>
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg">
           <div className="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
             <span className="text-green-700 text-3xl">📅</span>
           </div>
           <h3 className="text-lg font-bold text-green-700">Care Schedules</h3>
           <p className="text-gray-600">Set reminders and never miss a watering.</p>
         </div>
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg">
           <div className="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
             <span className="text-green-700 text-3xl">💧</span>
           </div>
@@ -67,17 +117,17 @@ export default function Home() {
       </div>
 
       {/* Plants Section */}
-      <h2 className="text-3xl font-bold text-green-800 mt-16 mb-4">My Plants</h2>
+      <h2 id="my-plants-section" className="text-3xl font-bold text-green-800 mt-16 mb-4">My Plants</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {plants.map((plant, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg cursor-pointer"
+            className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg cursor-pointer hover:shadow-gray-500"
             onClick={() => setSelectedPlant(plant)}
           >
             <img
-              src="https://i.imgur.com/y4DqwI4.png"
-              alt="Default Plant"
+              src={plant.image}
+              alt="Plant"
               className="w-full h-48 object-cover rounded-md mb-4"
             />
             <h2 className="text-xl font-semibold text-green-800">{plant.name}</h2>
@@ -89,15 +139,26 @@ export default function Home() {
                   e.stopPropagation();
                   toggleWatered(index);
                 }}
-                className={`px-4 py-2 rounded-lg shadow-md text-white font-medium ${wateredToday.includes(index) ? "bg-green-600" : "bg-gray-400"} hover:opacity-90`}
+                className={`px-4 py-2 rounded-lg shadow-md text-white font-medium water-btn-${index} ${wateredToday.includes(index) ? "bg-green-600" : "bg-blue-500"} hover:opacity-90`}
               >
                 {wateredToday.includes(index) ? "Watered" : "Water"}
               </button>
-              <div className="text-green-700 font-bold">Streak: {plant.streak} days</div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-600 text-lg">🔥</span>
+                <span className="text-green-700 font-bold">{plant.streak} {plant.streak === 1 ? "day" : "days"}</span>
+              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-6 right-6 bg-green-700 text-white text-xl rounded-full w-16 h-16 shadow-lg flex items-center justify-center hover:bg-green-800"
+      >
+        ➕
+      </button>
 
       {/* Plant Detail Page */}
       {selectedPlant && (
@@ -110,13 +171,25 @@ export default function Home() {
               Close
             </button>
             <img
-              src="https://i.imgur.com/y4DqwI4.png"
+              src={selectedPlant.image}
               alt="Plant Detail"
               className="w-full h-64 object-cover rounded-md mb-6"
             />
             <h2 className="text-2xl font-bold text-green-800 mb-2">{selectedPlant.name}</h2>
             <p className="text-gray-600 mb-2">Species: {selectedPlant.species}</p>
             <p className="text-gray-600">{selectedPlant.notes}</p>
+            <div className="flex items-center justify-between mt-6">
+              <button
+                onClick={() => toggleWatered(plants.findIndex(p => p === selectedPlant))}
+                className={`px-4 py-2 rounded-lg shadow-md text-white font-medium ${wateredToday.includes(plants.findIndex(p => p === selectedPlant)) ? "bg-green-600" : "bg-blue-500"} hover:opacity-90`}
+              >
+                {wateredToday.includes(plants.findIndex(p => p === selectedPlant)) ? "Watered" : "Water"}
+              </button>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-600 text-lg">🔥</span>
+                <span className="text-green-700 font-bold">{selectedPlant.streak} {selectedPlant.streak === 1 ? "day" : "days"}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -165,6 +238,15 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Falling Leaves CSS */}
+      <style jsx>{`
+        @keyframes fall {
+          to {
+            transform: translateY(100vh) rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
