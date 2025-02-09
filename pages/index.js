@@ -1,6 +1,8 @@
 import './index.css';
 import React, { useState } from "react";
 
+<div className="bg-blue-500 text-white p-4">Hello, Tailwind!</div>
+
 const PlantCareApp = () => {
   const [plants, setPlants] = useState([]);
   const [showModal, setShowModal] = useState(false);
