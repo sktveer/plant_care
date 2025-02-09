@@ -41,24 +41,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-300 via-green-100 to-green-200 p-6 relative">
-      {/* Falling Leaves Animation */}
-      <div className="absolute inset-0 pointer-events-none flex justify-center items-center">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute bg-green-500 rounded-full opacity-75"
-            style={{
-              width: `${Math.random() * 15 + 5}px`,
-              height: `${Math.random() * 15 + 5}px`,
-              top: `-${Math.random() * 50}px`,
-              left: `${Math.random() * 80}%`,
-              animation: `fall ${Math.random() * 8 + 5}s linear infinite`,
-              animationDelay: `${Math.random()}s`,
-            }}
-          ></div>
-        ))}
-      </div>
-
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center py-16 bg-green-600 text-white rounded-lg shadow-lg relative overflow-hidden">
         <h1 className="text-6xl font-extrabold mb-4">Nurture Your Green Haven</h1>
@@ -227,15 +209,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Falling Leaves CSS */}
-      <style jsx>{`
-        @keyframes fall {
-          to {
-            transform: translateY(100vh) rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
 }
